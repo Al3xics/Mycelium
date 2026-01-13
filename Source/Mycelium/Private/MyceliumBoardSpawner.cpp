@@ -127,12 +127,12 @@ float AMyceliumBoardSpawner::DetectSizeFromMesh() const
 	if (Orientation == EHexOrientation::FlatTop)
 	{
 		// largeur sommet → sommet = 2 * Extent.X
-		return Extent.X;
+		return Extent.X * CaseClass.GetDefaultObject()->GetActorScale().X;
 	}
 	else // PointyTop
 	{
 		// hauteur sommet → sommet = 2 * Extent.Y
-		return Extent.Y;
+		return Extent.Y * CaseClass.GetDefaultObject()->GetActorScale().Y;
 	}
 }
 
