@@ -1,3 +1,4 @@
+#include "JsonConsoleCommands.h"
 #include "JsonSaveSystem.h"
 #include "Misc/Paths.h"
 #include "Serialization/JsonSerializer.h"
