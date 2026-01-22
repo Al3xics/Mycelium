@@ -41,12 +41,13 @@ void AMycelandBoardSpawner::OnConstruction(const FTransform& Transform)
 
 		switch (GridLayout)
 		{
-		case EHexGridLayout::HexagonRadius: SpawnHexagonRadius(); break;
-		case EHexGridLayout::RectangleWH:   SpawnRectangleWH();   break;
+		case EHexGridLayout::HexagonRadius: SpawnHexagonRadius();
+			break;
+		case EHexGridLayout::RectangleWH: SpawnRectangleWH();
+			break;
 		}
 	}
 }
-
 
 
 void AMycelandBoardSpawner::ClearTiles()
@@ -118,7 +119,7 @@ void AMycelandBoardSpawner::SpawnHexagonRadius()
 	for (int32 Q = -Radius; Q <= Radius; ++Q)
 	{
 		const int32 RMin = FMath::Max(-Radius, -Q - Radius);
-		const int32 RMax = FMath::Min( Radius, -Q + Radius);
+		const int32 RMax = FMath::Min(Radius, -Q + Radius);
 
 		for (int32 R = RMin; R <= RMax; ++R)
 		{
@@ -222,8 +223,36 @@ void AMycelandBoardSpawner::SpawnRectangleWH()
 			if (!Tile) continue;
 
 			SpawnedTiles.Add(Tile);
+			TilesBP.Add(Cast<AMycelandTile>(Tile));
 			Tile->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
 			TilesByAxial.Add(FIntPoint(Q, R), Tile);
 		}
 	}
+}
+
+void AMycelandBoardSpawner::ResetGrid()
+{
+		for (AMycelandTile* Tile : TilesBP)
+		{
+			if (Tile)
+			{
+				FProperty* TileTypeProperty = Tile->GetClass()->FindPropertyByName(FName("TileType"));
+        
+				if (TileTypeProperty)
+				{
+					if (FEnumProperty* EnumProperty = CastField<FEnumProperty>(TileTypeProperty))
+					{
+						void* ValuePtr = EnumProperty->ContainerPtrToValuePtr<void>(Tile);
+                
+						EnumProperty->GetUnderlyingProperty()->SetIntPropertyValue(ValuePtr, static_cast<int64>(2)); 
+					}
+					else if (FByteProperty* ByteProperty = CastField<FByteProperty>(TileTypeProperty))
+					{
+						uint8* ValuePtr = ByteProperty->ContainerPtrToValuePtr<uint8>(Tile);
+						*ValuePtr = 0; 
+					}
+				}
+			}
+		}
+	
 }

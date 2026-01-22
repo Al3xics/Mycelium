@@ -89,10 +89,15 @@ public:
 	UPROPERTY(EditAnywhere, Category="Build")
 	bool bAutoRebuildOnConstruction = true;
 
+	UFUNCTION(BlueprintCallable)
+	void ResetGrid();
 
 private:
 	UPROPERTY(Transient)
 	TArray<TObjectPtr<AActor>> SpawnedTiles;
+
+	UPROPERTY(Transient)
+	TArray<TObjectPtr<AMycelandTile>> TilesBP;
 
 	void ClearTiles();
 
